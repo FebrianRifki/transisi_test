@@ -99,6 +99,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                       return null;
                     }
                   }
+                  return null;
                 },
               ),
             ),
