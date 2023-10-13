@@ -102,18 +102,21 @@ class DashboardScreen extends GetView<DashboardController> {
               return Visibility(
                 visible: controller.isLoadMoreVisible.value &&
                     controller.foundUsers.isEmpty,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(primaryColor),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10.0, left: 10.0),
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(primaryColor),
+                    ),
+                    onPressed: () {
+                      if (controller.currentPage < controller.totalPage) {
+                        controller.currentPage++;
+                        controller.getUserList();
+                      }
+                    },
+                    child: const Text('Load More'),
                   ),
-                  onPressed: () {
-                    if (controller.currentPage < controller.totalPage) {
-                      controller.currentPage++;
-                      controller.getUserList();
-                    }
-                  },
-                  child: const Text('Load More'),
                 ),
               );
             })
