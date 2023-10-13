@@ -48,7 +48,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         children: [
           Icon(
             widget.icon.icon,
-            color: _isFocused ? prymaryColor : Colors.grey,
+            color: _isFocused ? primaryColor : Colors.grey,
           ),
           const SizedBox(
             width: 10,
@@ -56,24 +56,26 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           Expanded(
             child: widget.isPhoneNumber!
                 ? TextFormField(
+                    controller: widget.controller,
                     focusNode: _focusNode,
                     maxLength: 16,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         labelText: widget.labelText,
                         labelStyle: TextStyle(
-                            color: _isFocused ? prymaryColor : Colors.grey),
+                            color: _isFocused ? primaryColor : Colors.grey),
                         focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                           color: Color.fromARGB(255, 3, 66, 117),
                         ))),
                   )
                 : TextFormField(
+                    controller: widget.controller,
                     focusNode: _focusNode,
                     decoration: InputDecoration(
                         labelText: widget.labelText,
                         labelStyle: TextStyle(
-                            color: _isFocused ? prymaryColor : Colors.grey),
+                            color: _isFocused ? primaryColor : Colors.grey),
                         focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
                           color: Color.fromARGB(255, 3, 66, 117),

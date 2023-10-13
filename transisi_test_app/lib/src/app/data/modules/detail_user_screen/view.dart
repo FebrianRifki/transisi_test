@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:transisi_test_app/src/app/common_widget/detail_widget_card.dart';
+import 'package:transisi_test_app/src/app/data/models/user_model.dart';
 import 'package:transisi_test_app/src/app/util/constant/color.dart';
 
 class DetailUserScreen extends StatelessWidget {
-  const DetailUserScreen({super.key});
-
-  @override
+  const DetailUserScreen({super.key, required this.user});
+  final User user;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -17,7 +17,7 @@ class DetailUserScreen extends StatelessWidget {
               Container(
                   height: height * 0.4,
                   decoration: const BoxDecoration(
-                    color: prymaryColor,
+                    color: primaryColor,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -56,51 +56,52 @@ class DetailUserScreen extends StatelessWidget {
                           )
                         ]),
                       ),
-                      Icon(
-                        Icons.person,
-                        color: Colors.white,
-                        size: height * 0.2,
+                      CircleAvatar(
+                        radius: height * 0.1,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: NetworkImage(user.avatar),
                       ),
                       Text(
-                        'Laterna verde',
+                        "${user.firstName} ${user.lastName}",
                         style: TextStyle(
                             color: Colors.white, fontSize: height * 0.04),
                       )
                     ],
                   )),
-              const Padding(
-                padding: EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
                 child: Column(
                   children: [
-                    DetailWidgetCard(
+                    const DetailWidgetCard(
                       mainText: "(999)-99999-99",
                       labelText: "Phone Number",
                       icon: Icon(
                         Icons.phone,
-                        color: prymaryColor,
+                        color: primaryColor,
                       ),
                       isHasMessageIcon: true,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     DetailWidgetCard(
-                      mainText: "lanterna@ligadajustica@gmail.com",
+                      mainText: user.email,
                       labelText: "E-mail",
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.email,
-                        color: prymaryColor,
+                        color: primaryColor,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
-                    DetailWidgetCard(
+                    const DetailWidgetCard(
                       mainText: "Share Contact",
                       labelText: "Share",
                       icon: Icon(
                         Icons.share,
-                        color: prymaryColor,
+                        color: primaryColor,
                       ),
                     )
                   ],

@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:transisi_test_app/src/app/data/models/user_model.dart';
+import 'package:transisi_test_app/src/app/util/constant/color.dart';
 
-class UserWidget extends StatelessWidget {
-  const UserWidget({super.key});
+class UserWidget extends StatefulWidget {
+  const UserWidget({super.key, required this.user});
 
+  final User user;
+
+  @override
+  State<UserWidget> createState() => _UserWidgetState();
+}
+
+class _UserWidgetState extends State<UserWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -12,33 +21,42 @@ class UserWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                height: 50,
-                width: 50,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color.fromARGB(255, 3, 66, 117),
-                ),
-                child: const Center(
-                    child: Text(
-                  'R',
-                  style: TextStyle(fontSize: 30, color: Colors.white),
-                )),
+              CircleAvatar(
+                radius: 30.0,
+                backgroundImage: NetworkImage(widget.user.avatar),
+                backgroundColor: Colors.transparent,
               ),
               const SizedBox(
                 width: 10,
               ),
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Text('Batman'), Text('(999)99999-9999)')],
+                children: [
+                  Text('${widget.user.firstName} ${widget.user.lastName}'),
+                  const Text('(999) 99999-9999')
+                ],
               ),
             ],
           ),
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.star_border_outlined,
-              ))
+              onPressed: () {
+                setState(() {
+                  if (widget.user.isFavorite) {
+                    widget.user.isFavorite = false;
+                  } else {
+                    widget.user.isFavorite = true;
+                  }
+                });
+              },
+              icon: widget.user.isFavorite
+                  ? const Icon(
+                      Icons.star,
+                      color: primaryColor,
+                    )
+                  : const Icon(
+                      Icons.star_border_outlined,
+                      color: primaryColor,
+                    ))
         ],
       ),
     );
