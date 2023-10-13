@@ -48,7 +48,7 @@ class LoginController extends GetxController {
         token = response['token'];
         isSuccessLogin.value = true;
         await Future.delayed(const Duration(milliseconds: 4000));
-        Get.to(() => const DashboardScreen());
+        Get.offAll(() => const DashboardScreen());
         isSuccessLogin.value = false;
       }
     } catch (e) {}
