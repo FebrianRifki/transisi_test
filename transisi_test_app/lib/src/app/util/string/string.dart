@@ -1,2 +1,2 @@
-String userNameErrorText = 'Username is required';
-String passowrdErrorText = 'Password is required';
+String userNameErrorMessage = 'Username is required';
+String passowrdErrorMessage = 'Password is required';

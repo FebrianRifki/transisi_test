@@ -7,11 +7,15 @@ class CustomTextFormField extends StatefulWidget {
       required this.icon,
       required this.labelText,
       this.controller,
+      this.formKey,
+      this.hasValidation = false,
       this.isPhoneNumber = false});
   final Icon icon;
   final TextEditingController? controller;
   final String labelText;
   final bool? isPhoneNumber;
+  final GlobalKey<FormState>? formKey;
+  final bool? hasValidation;
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -20,6 +24,9 @@ class CustomTextFormField extends StatefulWidget {
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
   final FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
+
+  String? errorText;
+  bool isError = false;
 
   @override
   void initState() {
@@ -54,33 +61,47 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             width: 10,
           ),
           Expanded(
-            child: widget.isPhoneNumber!
-                ? TextFormField(
-                    controller: widget.controller,
-                    focusNode: _focusNode,
-                    maxLength: 16,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        labelText: widget.labelText,
-                        labelStyle: TextStyle(
-                            color: _isFocused ? primaryColor : Colors.grey),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                          color: Color.fromARGB(255, 3, 66, 117),
-                        ))),
-                  )
-                : TextFormField(
-                    controller: widget.controller,
-                    focusNode: _focusNode,
-                    decoration: InputDecoration(
-                        labelText: widget.labelText,
-                        labelStyle: TextStyle(
-                            color: _isFocused ? primaryColor : Colors.grey),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                          color: Color.fromARGB(255, 3, 66, 117),
-                        ))),
+            child: Form(
+              key: widget.formKey,
+              child: TextFormField(
+                controller: widget.controller,
+                focusNode: _focusNode,
+                maxLength: widget.isPhoneNumber! ? 16 : null,
+                keyboardType:
+                    widget.isPhoneNumber! ? TextInputType.number : null,
+                decoration: InputDecoration(
+                  errorText: isError
+                      ? errorText
+                      : null, // Gunakan null ketika tidak ada kesalahan
+                  labelText: widget.labelText,
+                  labelStyle: TextStyle(
+                    color: _isFocused ? primaryColor : Colors.grey,
                   ),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 3, 66, 117),
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (widget.hasValidation!) {
+                    if (value == null || value.isEmpty) {
+                      setState(() {
+                        errorText = '${widget.labelText} is required';
+                        isError = true;
+                      });
+                      return errorText;
+                    } else {
+                      setState(() {
+                        isError = false;
+                        errorText = null;
+                      });
+                      return null;
+                    }
+                  }
+                },
+              ),
+            ),
           ),
         ],
       ),

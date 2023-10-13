@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderSide: BorderSide()),
                             hintText: 'Username',
                             errorText: _loginController.isErrorUsername.isTrue
-                                ? userNameErrorText
+                                ? userNameErrorMessage
                                 : '',
                           ),
                           validator: (value) {
@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderSide: BorderSide()),
                             hintText: 'Password',
                             errorText: _loginController.isErrorPassword.isTrue
-                                ? passowrdErrorText
+                                ? passowrdErrorMessage
                                 : '',
                           ),
                           validator: (value) {

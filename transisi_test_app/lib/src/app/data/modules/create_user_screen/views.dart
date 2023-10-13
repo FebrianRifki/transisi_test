@@ -19,6 +19,9 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _siteController = TextEditingController();
+  final GlobalKey<FormState> _firstNameFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _lastNameFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _jobFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +52,14 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                         const Spacer(),
                         InkWell(
                           onTap: (() {
-                            _controller.createUser(
-                                _firstNameController.text, _jobController.text);
+                            if (_firstNameFormKey.currentState!.validate() &&
+                                _lastNameFormKey.currentState!.validate() &&
+                                _jobFormKey.currentState!.validate()) {
+                              _controller.createUser(
+                                  _firstNameController.text,
+                                  _lastNameController.text,
+                                  _jobController.text);
+                            }
                           }),
                           child: const Text(
                             'Save',
@@ -87,17 +96,24 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                     )),
                 CustomTextFormField(
                   icon: const Icon(Icons.person),
-                  labelText: 'First Name',
+                  labelText: 'First Name *',
+                  formKey: _firstNameFormKey,
                   controller: _firstNameController,
+                  hasValidation: true,
                 ),
                 CustomTextFormField(
-                    controller: _lastNameController,
-                    icon: const Icon(Icons.person),
-                    labelText: 'Last Name'),
+                  controller: _lastNameController,
+                  formKey: _lastNameFormKey,
+                  icon: const Icon(Icons.person),
+                  labelText: 'Last Name *',
+                  hasValidation: true,
+                ),
                 CustomTextFormField(
                   icon: const Icon(Icons.work),
-                  labelText: 'Job',
+                  labelText: 'Job *',
+                  formKey: _jobFormKey,
                   controller: _jobController,
+                  hasValidation: true,
                 ),
                 CustomTextFormField(
                   controller: _phoneNumberController,

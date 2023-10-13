@@ -20,11 +20,11 @@ class CreateUserController extends GetxController {
     }
   }
 
-  createUser(username, job) async {
+  createUser(firstName, lastName, job) async {
     isProcessing.value = true;
     isSuccess.value = false;
     isFailed.value = false;
-    Map<String, dynamic> body = {'name': username, 'job': job};
+    Map<String, dynamic> body = {'name': '$firstName $lastName', 'job': job};
     var res = await provider.createUser(body);
     if (res) {
       print(res);
