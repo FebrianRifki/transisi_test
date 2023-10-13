@@ -9,6 +9,7 @@ class DashboardController extends GetxController {
   List<User> users = [];
   RxBool isLoadMoreVisible = false.obs;
   RxBool isProcessing = false.obs;
+  RxList<User> foundUsers = <User>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -32,5 +33,16 @@ class DashboardController extends GetxController {
 
     await Future.delayed(const Duration(milliseconds: 1000));
     isProcessing.value = false;
+  }
+
+  void searchUser(String text) {
+    if (text.isEmpty) {
+      foundUsers.value = <User>[];
+    } else if (text.length > 1) {
+      foundUsers.value = users
+          .where((user) =>
+              user.firstName.contains(text) || user.lastName.contains(text))
+          .toList();
+    }
   }
 }

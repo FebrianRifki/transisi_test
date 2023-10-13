@@ -6,12 +6,15 @@ import 'package:transisi_test_app/src/app/data/modules/create_user_screen/views.
 import 'package:transisi_test_app/src/app/data/modules/dashboard_screen/controller.dart';
 import 'package:transisi_test_app/src/app/data/modules/detail_user_screen/view.dart';
 import 'package:transisi_test_app/src/app/util/constant/color.dart';
+import 'package:transisi_test_app/src/app/util/debouncer.dart';
 
 class DashboardScreen extends GetView<DashboardController> {
   const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController searchController = TextEditingController();
+    final Debouncer debouncer = Debouncer(milliseconds: 500);
     final controller = Get.put(DashboardController());
     return SafeArea(
       child: Scaffold(
@@ -37,43 +40,62 @@ class DashboardScreen extends GetView<DashboardController> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
                 child: TextField(
-                  decoration: InputDecoration(
+                  onChanged: ((value) {
+                    debouncer.run(() {
+                      controller.searchUser(searchController.text);
+                    });
+                  }),
+                  style: const TextStyle(color: Colors.white),
+                  controller: searchController,
+                  decoration: const InputDecoration(
                     focusedBorder: InputBorder.none,
-                    suffixIcon: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.search,
-                        color: Colors.white,
-                      ),
+                    suffixIcon: Icon(
+                      Icons.search,
+                      color: Colors.white,
                     ),
                     hintText: 'Search',
-                    hintStyle: const TextStyle(color: Colors.white),
+                    hintStyle: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
             ),
             Obx(() {
-              if (controller.isProcessing.isTrue) {
+              if (controller.foundUsers.isNotEmpty) {
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 10,
+                  itemCount: controller.foundUsers.length,
                   itemBuilder: (context, index) {
-                    return const UserShimmer();
-                  },
-                );
-              } else {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.users.length,
-                  itemBuilder: (context, index) {
-                    final user = controller.users[index];
+                    final user = controller.foundUsers[index];
                     return GestureDetector(
                         onTap: () => Get.to(() => DetailUserScreen(user: user)),
                         child: UserWidget(user: user));
                   },
                 );
+              } else {
+                if (controller.isProcessing.isTrue) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 10,
+                    itemBuilder: (context, index) {
+                      return const UserShimmer();
+                    },
+                  );
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.users.length,
+                    itemBuilder: (context, index) {
+                      final user = controller.users[index];
+                      return GestureDetector(
+                          onTap: () =>
+                              Get.to(() => DetailUserScreen(user: user)),
+                          child: UserWidget(user: user));
+                    },
+                  );
+                }
               }
             }),
             Obx(() {
