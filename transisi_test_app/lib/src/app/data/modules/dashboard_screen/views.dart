@@ -100,7 +100,8 @@ class DashboardScreen extends GetView<DashboardController> {
             }),
             Obx(() {
               return Visibility(
-                visible: controller.isLoadMoreVisible.value,
+                visible: controller.isLoadMoreVisible.value &&
+                    controller.foundUsers.isEmpty,
                 child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor:

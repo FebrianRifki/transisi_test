@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:transisi_test_app/src/app/data/modules/dashboard_screen/views.dart';
 import 'package:transisi_test_app/src/app/data/modules/logins_screen/controller.dart';
 import 'package:transisi_test_app/src/app/util/constant/color.dart';
+import 'package:transisi_test_app/src/app/util/string/string.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +15,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final LoginController _loginController = LoginController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _userNameFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _passwordFormKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -35,26 +38,46 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(15.0),
                   child: Column(
                     children: [
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: const InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(borderSide: BorderSide()),
-                          hintText: 'Username',
+                      Form(
+                        key: _userNameFormKey,
+                        child: TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: const OutlineInputBorder(
+                                borderSide: BorderSide()),
+                            hintText: 'Username',
+                            errorText: _loginController.isErrorUsername.isTrue
+                                ? userNameErrorText
+                                : '',
+                          ),
+                          validator: (value) {
+                            return _loginController.validateUserName(value);
+                          },
                         ),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(borderSide: BorderSide()),
-                          hintText: 'Password',
+                      Form(
+                        key: _passwordFormKey,
+                        child: TextFormField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: const OutlineInputBorder(
+                                borderSide: BorderSide()),
+                            hintText: 'Password',
+                            errorText: _loginController.isErrorPassword.isTrue
+                                ? passowrdErrorText
+                                : '',
+                          ),
+                          validator: (value) {
+                            return _loginController.validatePassword(value);
+                          },
                         ),
                       ),
                       const SizedBox(
@@ -62,9 +85,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       ElevatedButton(
                           onPressed: () {
-                            _loginController.login(_emailController.text,
-                                _passwordController.text);
-                            // Get.to(() => const DashboardScreen());
+                            if (_userNameFormKey.currentState!.validate() &&
+                                _passwordFormKey.currentState!.validate()) {
+                              _loginController.login(_emailController.text,
+                                  _passwordController.text);
+                            }
                           },
                           child: const Text('Login')),
                       Obx(() {
@@ -88,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               .addPostFrameCallback((timeStamp) {
                             Get.snackbar(
                               'Failed',
-                              'Login Failed!',
+                              'Wrong username or password',
                               duration: const Duration(seconds: 2),
                               backgroundColor: Colors.redAccent,
                             );

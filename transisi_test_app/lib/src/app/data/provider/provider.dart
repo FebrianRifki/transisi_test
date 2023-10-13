@@ -19,6 +19,7 @@ class Provider {
         return jsonDecode(response.body);
       } else {
         print('Request failed with status: ${response.statusCode}');
+        return jsonDecode(response.body);
       }
     } catch (e) {
       print(e);
